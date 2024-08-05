@@ -4,6 +4,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   const darkModeButton = document.getElementById('dark-mode-button');
   const backButton = document.getElementById('back-button');
 
+  // Retrieve and apply the initial theme from stored preferences
+  if (window.electron) {
+    const preferences = await window.electron.getPreferences();
+    const initialTheme = preferences.theme || 'light'; // Default to light if no preference is set
+    if (initialTheme === 'dark') {
+      setDarkMode();
+    } else {
+      setLightMode();
+    }
+  }
+
   // Function to set light mode
   function setLightMode() {
     body.classList.remove('dark-mode');
@@ -20,17 +31,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     darkModeButton.classList.add('active');
     lightModeButton.classList.remove('active');
     window.electron.setPreferences({ theme: 'dark' });
-  }
-
-  // Retrieve and apply the initial theme from stored preferences
-  if (window.electron) {
-    const preferences = await window.electron.getPreferences();
-    const initialTheme = preferences.theme || 'light'; // Default to light if no preference is set
-    if (initialTheme === 'dark') {
-      setDarkMode();
-    } else {
-      setLightMode();
-    }
   }
 
   // Theme switching event listeners
@@ -51,3 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 });
+
+// Prevent white flicker
+
+app.disableHardwareAcceleration();

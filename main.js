@@ -3,16 +3,11 @@ const path = require('path');
 const fs = require('fs');
 
 let mainWindow;
-
-// Path to preferences file in the user's data directory
 const preferencesPath = path.join(app.getPath('userData'), 'preferences.json');
+const defaultPreferences = { theme: 'light' };
 
-// Default preferences
-const defaultPreferences = {
-  theme: 'light',
-};
+app.disableHardwareAcceleration();
 
-// Function to read preferences from the file
 function readPreferences() {
   try {
     if (fs.existsSync(preferencesPath)) {
@@ -25,7 +20,6 @@ function readPreferences() {
   return defaultPreferences;
 }
 
-// Function to write preferences to the file
 function writePreferences(preferences) {
   try {
     fs.writeFileSync(preferencesPath, JSON.stringify(preferences, null, 2));
@@ -34,10 +28,14 @@ function writePreferences(preferences) {
   }
 }
 
-// Function to apply the theme to the page
-function applyThemeToPage() {
-  const preferences = readPreferences();
-  mainWindow.webContents.send('set-theme', preferences.theme);
+function applyThemeToPage(theme) {
+  if (theme === 'dark') {
+    mainWindow.webContents.send('set-theme', 'dark');
+    nativeTheme.themeSource = 'dark';
+  } else {
+    mainWindow.webContents.send('set-theme', 'light');
+    nativeTheme.themeSource = 'light';
+  }
 }
 
 function createWindow() {
@@ -49,6 +47,7 @@ function createWindow() {
     height: initialHeight,
     minWidth: initialWidth,
     minHeight: initialHeight,
+    frame: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -59,26 +58,33 @@ function createWindow() {
 
   mainWindow.loadFile('index.html');
 
+  // Apply the saved theme on startup
+  const preferences = readPreferences();
+  applyThemeToPage(preferences.theme || 'light');
+
   mainWindow.webContents.on('did-finish-load', () => {
-    applyThemeToPage();
+    applyThemeToPage(preferences.theme || 'light');
+  });
+
+  nativeTheme.on('updated', () => {
+    applyThemeToPage(nativeTheme.themeSource);
   });
 
   mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    const csp =
-      "default-src 'self'; " +
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline'; " +
-      "connect-src 'self' http://213.165.84.44:3000; " +
-      "font-src 'self' https://fonts.gstatic.com; " +
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-      "frame-src 'none'; " +
-      "object-src 'none'; " +
-      "base-uri 'self'; " +
-      "form-action 'self';";
+    const csp = `
+      default-src 'self';
+      script-src 'self' 'unsafe-eval' 'unsafe-inline';
+      connect-src 'self' http://213.165.84.44:3000;
+      font-src 'self' https://fonts.gstatic.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      frame-src 'none';
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+    `;
     callback({
       responseHeaders: Object.assign(
-        {
-          'Content-Security-Policy': [csp],
-        },
+        { 'Content-Security-Policy': [csp] },
         details.responseHeaders
       ),
     });
@@ -93,9 +99,6 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
-
-  // Update theme when the native theme is updated
-  nativeTheme.on('updated', applyThemeToPage);
 });
 
 app.on('window-all-closed', () => {
@@ -104,13 +107,13 @@ app.on('window-all-closed', () => {
   }
 });
 
-// Listen for theme change from renderer process
 ipcMain.handle('get-preferences', async () => {
   return readPreferences();
 });
 
 ipcMain.handle('set-preferences', async (event, preferences) => {
   writePreferences(preferences);
+  applyThemeToPage(preferences.theme); // Apply the theme immediately
 });
 
 ipcMain.on('navigate', (event, page) => {

@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
+    background-color: #ffffff;
     background-repeat: no-repeat;
     background-size: cover;
     font-family: 'Inter', sans-serif;
@@ -18,13 +19,17 @@ body {
 }
 
 .dark-mode {
-    transition: background-image 0.5s ease, color 0.5s ease; /* Ensure dark mode has a transition */
-    background-image: url(assets/backgrounds/darkmode.png);
-    color: #FFF;
+    background: rgb(32,87,57);
+    background: linear-gradient(112.1deg, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
+    background: -moz-linear-gradient(to right, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
+    background: -webkit-linear-gradient(to right, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
 }
 
 .light-mode {
-    background-image: url(assets/backgrounds/lightmode.png);
+    background: rgb(238,174,202);
+    background: linear-gradient(112.1deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+    background: -moz-linear-gradient(to right, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+    background: -webkit-linear-gradient(to right, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
 }
 
 /* Logo styles */
@@ -89,7 +94,15 @@ body {
     margin-top: 10%;
 }
 
-.login-text {
+.light-mode .login-text {
+    color: black;
+    font-weight: bold;
+    font-size: 5vw;
+    margin: 20px 0;
+}
+
+.dark-mode .login-text {
+    color: white;
     font-weight: bold;
     font-size: 5vw;
     margin: 20px 0;
