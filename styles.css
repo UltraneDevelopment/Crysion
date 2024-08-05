@@ -1,0 +1,308 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    text-align: center;
+    overflow: auto;
+    color: #000;
+    transition: background-image 0.5s ease, color 0.5s ease; /* Add transition for background and text color */
+}
+
+.dark-mode {
+    transition: background-image 0.5s ease, color 0.5s ease; /* Ensure dark mode has a transition */
+    background-image: url(assets/backgrounds/darkmode.png);
+    color: #FFF;
+}
+
+.light-mode {
+    background-image: url(assets/backgrounds/lightmode.png);
+}
+
+/* Logo styles */
+#logo {
+    max-width: 100%;
+    height: auto;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 20px;
+    transition: opacity 0.5s ease; /* Add transition for opacity */
+}
+
+/* Specific logo images for dark and light modes */
+.dark-mode #logo {
+    content: url(assets/logo/crysion-light.png); /* Dark mode logo */
+}
+
+.light-mode #logo {
+    content: url(assets/logo/crysion-dark.png); /* Light mode logo */
+}
+
+.mode-switch-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    border: 1px solid #006FEE;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.mode-switch-button {
+    padding: 10px 20px;
+    background-color: #FFF;
+    color: #006FEE;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+    border: none;
+}
+
+.mode-switch-button.active {
+    background-color: #006FEE;
+    color: #FFF;
+}
+
+.mode-switch-button:first-child {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.mode-switch-button:last-child {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10%;
+}
+
+.login-text {
+    font-weight: bold;
+    font-size: 5vw;
+    margin: 20px 0;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 23px; /* Add gap between email and password */
+}
+
+.input-box {
+    width: 400px;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid #989898;
+    background-color: rgba(217, 217, 217, 0.5);
+    padding: 10px;
+    font-size: 1.2em;
+    box-sizing: border-box;
+    color: #000;
+}
+
+.input-box::placeholder {
+    transition: color 0.5s ease; /* Transition for placeholder text color */
+    color: #000;
+}
+
+.dark-mode .input-box::placeholder {
+    color: #FFF;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+    margin-top: 10px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    color: #000;
+}
+
+.dark-mode .remember-me {
+    color: #FFF;
+}
+
+.remember-me input {
+    margin-right: 5px;
+}
+
+.forgot-password {
+    color: #006FEE;
+    text-decoration: none;
+    margin-right: 0;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    width: 400px;  /* Consistent with the input boxes */
+    margin-top: 20px;
+    position: relative; /* Container for absolute positioning of children */
+}
+
+.sign-in-button {
+    width: 200px;
+    height: 50px;
+    border-radius: 30px;
+    background-color: #006FEE;
+    color: #FFF;
+    font-size: 1.2em;
+    border: none;
+    cursor: pointer;
+    margin-right: -10px;
+}
+
+.error-notification {
+    width: 400px;
+    padding: 10px 20px;
+    margin-top: 23px;
+    border: 2px solid red;
+    border-radius: 8px;
+    background-color: #FFF;
+    display: none; /* Initially hidden */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease; /* Transition for fade-in/out */
+    box-sizing: border-box;
+    position: relative;
+    display: flex; /* Flexbox to align items horizontally */
+    align-items: flex-start; /* Align items at the start of the container */
+}
+
+.error-notification.show {
+    display: flex; /* Ensure display is flex when visible */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease, visibility 0s; /* Transition for fade-in/out */
+}
+
+.icon-container {
+    display: flex;
+    align-items: center; /* Center icon vertically */
+    flex-shrink: 0; /* Prevent the icon from shrinking */
+}
+
+.error-icon {
+    width: 24px; /* Fixed width for the icon */
+    height: 24px; /* Fixed height for the icon */
+    scale: 1.25;
+}
+
+.text-container {
+    margin-left: 20px;
+}
+
+.error-notification h3 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    margin: 0 0 5px 0; /* Margin at the bottom to separate from paragraph */
+    color: #333333;
+    text-align: left; /* Ensure text is aligned to the left */
+}
+
+.error-notification p {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+    color: #4D4D4D;
+    margin: 0;
+    text-align: left; /* Ensure text is aligned to the left */
+    overflow-wrap: break-word; /* Prevent overflow by breaking long words */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    background: none;
+    border: none;
+    color: #828282;
+    transition: color 1s ease, transform 2.5s ease;
+}
+
+.close-button:hover {
+    color: darkred;
+    transform: scale(1.5);
+}
+
+.hidden {
+    display: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .login-text {
+        font-size: 8vw;
+    }
+
+    #logo {
+        width: 35%;
+    }
+
+    .input-box {
+        width: 70%;
+        height: 8vw;
+    }
+
+    .row {
+        width: 70%;
+    }
+
+    .button-container {
+        width: 70%;
+    }
+
+    .sign-in-button {
+        width: 70%;
+        height: 8vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-text {
+        font-size: 10vw;
+    }
+
+    #logo {
+        width: 45%;
+    }
+
+    .input-box {
+        width: 80%;
+        height: 10vw;
+    }
+
+    .row {
+        width: 80%;
+    }
+
+    .button-container {
+        width: 80%;
+    }
+
+    .sign-in-button {
+        width: 80%;
+        height: 10vw;
+    }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "crysion",
+  "version": "1.0.0",
+  "description": "Crysion - A freelancer management platform.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "",
+  "keywords": [],
+  "author": "Ultrane Development",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^31.3.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "fetch": "^1.1.0",
+    "mysql2": "^3.11.0"
+  }
+}
