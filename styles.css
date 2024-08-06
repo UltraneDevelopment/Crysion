@@ -55,6 +55,23 @@ body {
 
 /* Sidebar Styling [Settings Menu] */
 
+    /* Sidebar Logo Styling */
+
+    #logoSettings {
+        width: 100%; /* Adjust size as needed */
+        height: auto; /* Maintain aspect ratio */
+        max-width: 100%; /* Ensure it doesn’t exceed container */
+    }
+    
+
+    .dark-mode #logoSettings {
+        content: url(assets/logo/crysion-lightwtext.png);
+    }
+
+    .light-mode #logoSettings {
+        content: url(assets/logo/crysion-darkwtext.png)
+    }
+
 .settings-sidebar,
 .styles-sidebar { /* Add styles-sidebar to target both */
     position: fixed;
@@ -75,9 +92,22 @@ body {
     overflow-y: auto;
 }
 
+.dark-mode .settings-sidebar,.styles-sidebar {
+    background-color: rgb(32, 38, 57);
+    color: white;
+}
+
+.light-mode .settings-sidebar,.styles-sidebar {
+    background-color: white;
+}
+
 .settings-sidebar.show,
 .styles-sidebar.show { /* Ensure both sidebars can be shown */
     left: 0;
+}
+
+.dark-mode .settings-icon {
+    filter: invert(100%) sepia(3%) saturate(3%) hue-rotate(303deg) brightness(118%) contrast(100%);
 }
 
 .sidebar-button {
@@ -125,8 +155,6 @@ body {
     opacity: 1;
     visibility: visible;
 }
-
-/* Logo Styling [Settings Menu] */
 
 #logo {
     max-width: 100%;
