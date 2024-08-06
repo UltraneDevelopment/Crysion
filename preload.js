@@ -19,4 +19,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   // Method to get preferences
   getPreferences: () => ipcRenderer.invoke('get-preferences'),
+
+  // External URL handling
+  shell: {
+    openExternal: (url) => ipcRenderer.invoke('open-external', url)
+  }
 });

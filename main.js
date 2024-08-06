@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, nativeTheme } = require('electron');
+const { app, BrowserWindow, ipcMain, nativeTheme, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -54,7 +54,6 @@ function createWindow() {
       contextIsolation: true,
       enableRemoteModule: false,
       nodeIntegration: false,
-      
     },
   });
 
@@ -133,4 +132,9 @@ ipcMain.on('navigate', (event, page) => {
   }
 
   mainWindow.loadFile(filePath);
+});
+
+// External URL Open
+ipcMain.handle('open-external', (event, url) => {
+  shell.openExternal(url); // Ensure this function is correctly used to open the URL
 });
