@@ -49,6 +49,8 @@ function createWindow() {
     height: initialHeight,
     minWidth: initialWidth,
     minHeight: initialHeight,
+    maxHeight: initialHeight,
+    maxWidth: initialWidth,
     frame: true,
     autoHideMenuBar: false,
     webPreferences: {

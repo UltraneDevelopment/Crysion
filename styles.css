@@ -15,9 +15,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    height: 100vh;
+    height: 100%;
     text-align: center;
-    overflow: auto;
+    overflow: hidden;
     color: #000;
     transition: background-image 0.5s ease, color 0.5s ease; /* Add transition for background and text color */
 }
@@ -29,6 +29,7 @@ body {
     background: linear-gradient(112.1deg, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
     background: -moz-linear-gradient(to right, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
     background: -webkit-linear-gradient(to right, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
+    background-repeat: no-repeat;
 }
 
 .light-mode {
@@ -36,6 +37,7 @@ body {
     background: linear-gradient(112.1deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
     background: -moz-linear-gradient(to right, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
     background: -webkit-linear-gradient(to right, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+    background-repeat: no-repeat;
 }
 
 /* Settings Menu */
@@ -219,7 +221,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 10%;
+    margin-top: 7.5%;
 }
 
 .light-mode .login-text {
