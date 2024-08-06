@@ -47,8 +47,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: initialWidth,
     height: initialHeight,
-    minWidth: 800,  // Optional minimum width for usability
-    minHeight: 600, // Optional minimum height for usability
+    minWidth: initialWidth,
+    minHeight: initialHeight,
     frame: true,
     autoHideMenuBar: false,
     webPreferences: {
