@@ -42,7 +42,7 @@ function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
   const initialWidth = Math.round(width * 0.75);   // 75% of screen width
-  const initialHeight = Math.round(height * 0.8889); // 88.89% of screen height
+  const initialHeight = Math.round(height * 0.80); // 80% of screen height
 
   mainWindow = new BrowserWindow({
     width: initialWidth,
