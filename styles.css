@@ -323,8 +323,8 @@ body {
     border: 2px solid red;
     border-radius: 8px;
     background-color: #FFF;
-    display: none; /* Initially hidden */
     opacity: 0;
+    display: none;
     visibility: hidden;
     transition: opacity 0.5s ease, visibility 0.5s ease; /* Transition for fade-in/out */
     box-sizing: border-box;
@@ -334,10 +334,9 @@ body {
 }
 
 .error-notification.show {
-    display: flex; /* Ensure display is flex when visible */
     opacity: 1;
     visibility: visible;
-    transition: opacity 0.5s ease, visibility 0s; /* Transition for fade-in/out */
+    transition: opacity 0.5s ease, visibility 0.5s ease; /* Transition for fade-in/out */
 }
 
 .icon-container {

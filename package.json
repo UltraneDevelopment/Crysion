@@ -1,6 +1,6 @@
 {
   "name": "crysion",
-  "version": "1.0.0",
+  "version": "1.0.59",
   "description": "Crysion - A freelancer management platform.",
   "main": "main.js",
   "scripts": {
