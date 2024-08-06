@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, nativeTheme, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, nativeTheme, shell, screen } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -39,14 +39,16 @@ function applyThemeToPage(theme) {
 }
 
 function createWindow() {
-  const initialWidth = 1440;
-  const initialHeight = 960;
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+  const initialWidth = Math.round(width * 0.75);   // 75% of screen width
+  const initialHeight = Math.round(height * 0.8889); // 88.89% of screen height
 
   mainWindow = new BrowserWindow({
     width: initialWidth,
     height: initialHeight,
-    minWidth: initialWidth,
-    minHeight: initialHeight,
+    minWidth: 800,  // Optional minimum width for usability
+    minHeight: 600, // Optional minimum height for usability
     frame: true,
     autoHideMenuBar: false,
     webPreferences: {
@@ -136,5 +138,5 @@ ipcMain.on('navigate', (event, page) => {
 
 // External URL Open
 ipcMain.handle('open-external', (event, url) => {
-  shell.openExternal(url); // Ensure this function is correctly used to open the URL
+  shell.openExternal(url);
 });
