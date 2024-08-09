@@ -42,6 +42,7 @@ body {
     background-size: cover;  /* Ensure the background covers the whole page */
     background-repeat: no-repeat;  /* Prevent the background from repeating */
     background-position: center center;  /* Center the background image */
+
 }
 
 /* Settings Menu */
@@ -189,6 +190,8 @@ body {
     align-items: center;
     justify-content: center;
     margin-top: 7.5%;
+    padding: 0 10px; /* Add padding for smaller screens */
+    box-sizing: border-box; /* Ensure padding is included in width */
 }
 
 .light-mode .login-text {
@@ -417,5 +420,26 @@ body {
     .sign-in-button {
         width: 80%;
         height: 10vw;
+    }
+}
+
+@media (max-width: 1024px) {
+    .container {
+        margin-top: 5%; /* Reduce top margin for tablets and smaller screens */
+        padding: 0 5%; /* Adjust padding for medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin-top: 2.5%; /* Further reduce top margin for small screens */
+        padding: 0 2%; /* Adjust padding for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin-top: 0; /* Remove top margin for very small screens */
+        padding: 0 1%; /* Adjust padding for very small screens */
     }
 }
