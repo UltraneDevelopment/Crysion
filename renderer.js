@@ -212,3 +212,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Close button for error notification not found.');
     }
 });
+
+// Package.json HTML Version
+
+    // Version Updates (Package.json To HTML Sidebar)
+
+    document.addEventListener('DOMContentLoaded', () => {
+        window.electronAPI.onVersion((version) => {
+            const versionElement = document.getElementById('app-version');
+            if (versionElement) {
+                versionElement.textContent = `Version: v${version}`;
+            }
+        });
+    });

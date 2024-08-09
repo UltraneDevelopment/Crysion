@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, nativeTheme, shell, screen } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const packageJson = require('./package.json');
 
 let mainWindow;
 const preferencesPath = path.join(app.getPath('userData'), 'preferences.json');
@@ -49,19 +50,23 @@ function createWindow() {
     height: initialHeight,
     minWidth: initialWidth,
     minHeight: initialHeight,
-    maxHeight: initialHeight,
-    maxWidth: initialWidth,
     frame: true,
     autoHideMenuBar: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       enableRemoteModule: false,
-      nodeIntegration: false,
+      nodeIntegration: false
     },
   });
 
   mainWindow.loadFile('index.html');
+
+  // Send Version Number
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.send('app-version', packageJson.version);
+});
 
   // Apply the saved theme on startup
   const preferences = readPreferences();
