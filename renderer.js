@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const errorNotification = document.getElementById('error-notification');
 
     // Sidebar Functions
-
     function toggleSidebar() {
         settingsSidebar.classList.toggle('show');
         overlay.classList.toggle('show');
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Event Listeners
-
     if (settingsIcon) {
         settingsIcon.addEventListener('click', toggleSidebar);
     } else {
@@ -93,7 +91,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Application of Styles
-
     function setLightMode() {
         body.classList.remove('dark-mode');
         body.classList.add('light-mode');
@@ -115,7 +112,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Fetching Saved Preferences (Styles) & Applying
-
     if (window.electron) {
         const preferences = await window.electron.getPreferences();
         const initialTheme = preferences.theme || 'light';
@@ -127,7 +123,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Changing Current Style
-
     if (lightModeButton) {
         lightModeButton.addEventListener('click', () => {
             setLightMode();
@@ -147,7 +142,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Forgot Password
-
     const forgotPassword = document.querySelector('.forgot-password');
     if (forgotPassword) {
         forgotPassword.addEventListener('click', (event) => {
@@ -161,7 +155,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Sign In Button & Server Request
-
     const signInButton = document.querySelector('.sign-in-button');
     if (signInButton) {
         signInButton.addEventListener('click', async (event) => {
@@ -180,7 +173,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
 
                 // Sign In Server Result Handling & Error Notification
-
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -188,7 +180,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const result = await response.json();
 
                 if (result.message === 'Login successful') {
-                    // Handle login success
+                    // Retrieve the plan type from the response
+                    const userPlanType = result.planType;
+
+                    console.log('User logged in with plan type:', userPlanType);
+
+                    // Redirect user based on plan type
+                    switch (userPlanType) {
+                        case 'plus':
+                            window.electron.navigate('./dashboards/plus-dashboard.html'); // Modify as needed
+                            break;
+                        case 'premium':
+                            window.electron.navigate('/dashboards/premium-dashboard.html'); // Modify as needed
+                            break;
+                        case 'demo':
+                            window.electron.navigate('/dashboards/demo-dashboard.html'); // Modify as needed
+                            break;
+                        case 'platinum':
+                            window.electron.navigate('/dashboards/platinum-dashboard.html'); // Modify as needed
+                            break;
+                        default:
+                            window.electron.navigate('/dashboards/default-dashboard.html'); // Fallback for unrecognized plans
+                            break;
+                    }
                 } else {
                     console.log('Login failed:', result);
                     errorNotification.classList.add('show');
@@ -214,14 +228,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Package.json HTML Version
-
-    // Version Updates (Package.json To HTML Sidebar)
-
-    document.addEventListener('DOMContentLoaded', () => {
-        window.electronAPI.onVersion((version) => {
-            const versionElement = document.getElementById('app-version');
-            if (versionElement) {
-                versionElement.textContent = `Version: v${version}`;
-            }
-        });
+// Version Updates (Package.json To HTML Sidebar)
+document.addEventListener('DOMContentLoaded', () => {
+    window.electronAPI.onVersion((version) => {
+        const versionElement = document.getElementById('app-version');
+        if (versionElement) {
+            versionElement.textContent = `Version: v${version}`;
+        }
     });
+});
