@@ -189,7 +189,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 2.5%;
+    margin-top: 1.5%;
     padding: 0 10px; /* Add padding for smaller screens */
     box-sizing: border-box; /* Ensure padding is included in width */
     height: 100%;
