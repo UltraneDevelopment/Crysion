@@ -136,6 +136,18 @@ ipcMain.on('navigate', (event, page) => {
     case 'home':
       filePath = path.join(__dirname, 'index.html');
       break;
+    case 'plus-dashboard':
+      filePath = path.join(__dirname, 'dashboards/plus-dashboard.html');
+      break;
+    case 'premium-dashboard':
+      filePath = path.join(__dirname, 'dashboards/premium-dashboard.html');
+      break;
+    case 'demo-dashboard':
+      filePath = path.join(__dirname, 'dashboards/demo-dashboard.html');
+      break;
+    case 'platinum-dashboard':
+      filePath = path.join(__dirname, 'dashboards/platinum-dashboard.html');
+      break;
     default:
       filePath = path.join(__dirname, 'index.html');
   }

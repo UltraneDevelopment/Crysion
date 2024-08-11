@@ -188,19 +188,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                     // Redirect user based on plan type
                     switch (userPlanType) {
                         case 'plus':
-                            window.electron.navigate('./dashboards/plus-dashboard.html'); // Modify as needed
+                            window.electron.navigate('plus-dashboard');
                             break;
                         case 'premium':
-                            window.electron.navigate('/dashboards/premium-dashboard.html'); // Modify as needed
+                            window.electron.navigate('premium-dashboard');
                             break;
                         case 'demo':
-                            window.electron.navigate('/dashboards/demo-dashboard.html'); // Modify as needed
+                            window.electron.navigate('demo-dashboard');
                             break;
                         case 'platinum':
-                            window.electron.navigate('/dashboards/platinum-dashboard.html'); // Modify as needed
+                            window.electron.navigate('platinum-dashboard');
                             break;
                         default:
-                            window.electron.navigate('/dashboards/default-dashboard.html'); // Fallback for unrecognized plans
+                            window.electron.navigate('home');
                             break;
                     }
                 } else {
