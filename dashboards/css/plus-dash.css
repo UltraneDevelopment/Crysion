@@ -1,0 +1,148 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body.dark-mode {
+    background: rgb(32,87,57);
+    background: linear-gradient(112.1deg, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
+    background: -moz-linear-gradient(to right, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
+    background: -webkit-linear-gradient(to right, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
+    background-size: cover;  /* Ensure the background covers the whole page */
+    background-repeat: no-repeat;  /* Prevent the background from repeating */
+    background-position: center center;  /* Center the background image */
+}
+
+body.light-mode {
+    background: rgb(238,174,202);
+    background: linear-gradient(112.1deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+    background: -moz-linear-gradient(to right, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+    background: -webkit-linear-gradient(to right, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+    background-size: cover;  /* Ensure the background covers the whole page */
+    background-repeat: no-repeat;  /* Prevent the background from repeating */
+    background-position: center center;  /* Center the background image */
+
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    height: 90vh; /* Set height to a relative viewport height */
+    background-color: #F5F5F7;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 50px;
+    position: fixed; /* Fixed positioning relative to the viewport */
+    left: 1.5%; /* Align to the left side of the viewport */
+    top: 50%; /* Set top edge to the middle of the viewport */
+    transform: translateY(-50%); /* Move it up by half its own height */
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1); /* Optional: adds shadow to the right side */
+    overflow-y: auto; /* Enables vertical scrolling if content overflows */
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+}
+
+.logo-container {
+    padding: 10px 0;
+}
+
+.logo-container img {
+    height: 100%;
+    width: 100%;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 15px;
+}
+
+.nav-links a {
+    display: block;
+    padding: 12px 20px; /* Add padding for a button-like feel */
+    margin: 5px 0; /* Add margin between buttons */
+    color: black; /* Text color */
+    /* background-color: ; /* Button background color */
+    border: none; /* Remove default border */
+    border-radius: 15px; /* Rounded corners */
+    text-align: center; /* Center text */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Make text bold */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Add a subtle shadow */
+}
+
+.nav-links a:hover, .nav-links a.active {
+    background-color: #7E868E; /* Darken background on hover/active */
+    transform: translateY(-2px); /* Slight upward movement on hover */
+    box-shadow: 0 6px 8px rgba(0,0,0,0.2); /* Enhance shadow on hover */
+}
+
+.support p {
+    margin-top: auto;
+}
+
+.support button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.content-box {
+    margin-left: 22.5%; 
+    padding: 20px; 
+    width: 73.5%;
+    background-color: #F5F5F7; 
+    border-radius: 50px; 
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    margin-top: 20px; 
+    height: calc(100vh - 40px); 
+    overflow-y: auto; 
+    height: 90%;
+    top: 50%;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background-color: #ffffff;
+    height: 150px;
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+    }
+
+    .main-content {
+        order: -1;
+    }
+
+    .card-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
