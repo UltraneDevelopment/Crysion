@@ -20,6 +20,13 @@ contextBridge.exposeInMainWorld('electron', {
   // Method to get preferences
   getPreferences: () => ipcRenderer.invoke('get-preferences'),
 
+  // Method to invalidate sessions
+  invalidateSession: () => ipcRenderer.send('invalidate-session'),
+
+  // Method to send back to sign in
+
+  navigateToSignIn: () => ipcRenderer.invoke('navigate-to-sign-in'),
+
   // External URL handling
   shell: {
     openExternal: (url) => ipcRenderer.invoke('open-external', url)

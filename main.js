@@ -63,18 +63,13 @@ function createWindow() {
   mainWindow.loadFile('index.html');
 
   // Send Version Number
-
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.webContents.send('app-version', packageJson.version);
-});
+  });
 
   // Apply the saved theme on startup
   const preferences = readPreferences();
   applyThemeToPage(preferences.theme || 'light');
-
-  mainWindow.webContents.on('did-finish-load', () => {
-    applyThemeToPage(preferences.theme || 'light');
-  });
 
   nativeTheme.on('updated', () => {
     applyThemeToPage(nativeTheme.themeSource);
@@ -123,7 +118,7 @@ ipcMain.handle('get-preferences', async () => {
 
 ipcMain.handle('set-preferences', async (event, preferences) => {
   writePreferences(preferences);
-  applyThemeToPage(preferences.theme); // Apply the theme immediately
+  applyThemeToPage(preferences.theme);
 });
 
 ipcMain.on('navigate', (event, page) => {
@@ -153,6 +148,18 @@ ipcMain.on('navigate', (event, page) => {
   }
 
   mainWindow.loadFile(filePath);
+});
+
+ipcMain.handle('invalidate-session', async () => {
+  console.log('Invalidating session...');
+  await mainWindow.webContents.session.clearStorageData();
+  console.log('Session cleared, navigating to sign-in page...');
+  mainWindow.loadFile('index.html');
+});
+
+ipcMain.handle('navigate-to-sign-in', async () => {
+  console.log('Navigating to sign-in page...');
+  mainWindow.loadFile('index.html');
 });
 
 // External URL Open

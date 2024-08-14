@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
     const lightModeButton = document.getElementById('light-mode-button-sidebar');
     const darkModeButton = document.getElementById('dark-mode-button-sidebar');
+    const signOutButton = document.querySelector('.sign-out');
 
     // Application of Styles
     function setLightMode() {
@@ -33,13 +34,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Fetching Saved Preferences (Styles) & Applying
-    if (window.electron) {
-        window.electron.getPreferences().then(preferences => {
-            const initialTheme = preferences.theme || 'light';
-            if (initialTheme === 'dark') {
-                setDarkMode();
-            } else {
-                setLightMode();
+    async function applyInitialTheme() {
+        try {
+            if (window.electron) {
+                const preferences = await window.electron.getPreferences();
+                const initialTheme = preferences.theme || 'light';
+                if (initialTheme === 'dark') {
+                    setDarkMode();
+                } else {
+                    setLightMode();
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching preferences:', error);
+        }
+    }
+
+    applyInitialTheme();
+
+    // Sign Out Functionality
+    if (signOutButton) {
+        signOutButton.addEventListener('click', async () => {
+            console.log('Sign out button clicked');
+            try {
+                if (window.electron) {
+                    await window.electron.invalidateSession();
+                    console.log('Session invalidated, navigating to sign-in page');
+                    await window.electron.navigateToSignIn();
+                    console.log('Successfully navigated to sign-in page');
+                }
+            } catch (error) {
+                console.error('Error during sign-out process:', error);
             }
         });
     }
