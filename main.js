@@ -162,6 +162,11 @@ ipcMain.handle('navigate-to-sign-in', async () => {
   mainWindow.loadFile('index.html');
 });
 
+ipcMain.on('login-demo', (event) => {
+  // Load the demo dashboard directly
+  mainWindow.loadFile(path.join(__dirname, 'dashboards/demo-dashboard.html'));
+});
+
 // External URL Open
 ipcMain.handle('open-external', (event, url) => {
   shell.openExternal(url);

@@ -8,11 +8,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const stylesSidebar = document.querySelector('.styles-sidebar');
     const stylesButton = document.getElementById('styles-button');
     const getSupportButton = document.getElementById('get-support-button');
+    const getStartedButton = document.getElementById('get-started-button');
+    const demoAccountButton = document.getElementById('demo-account-button');
     const lightModeButtonSidebar = document.getElementById('light-mode-button-sidebar');
     const darkModeButtonSidebar = document.getElementById('dark-mode-button-sidebar');
     const closeSettingsSidebar = document.getElementById('close-settings-sidebar');
     const closeButton = document.getElementById('close-button');
     const errorNotification = document.getElementById('error-notification');
+    const signOutButton = document.querySelector('.sign-out');
 
     // Sidebar Functions
     function toggleSidebar() {
@@ -61,6 +64,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         console.error('Get support button not found.');
     }
+
+    if (getStartedButton) {
+        getStartedButton.addEventListener('click', () => {
+            if (window.electron && window.electron.shell) {
+                window.electron.shell.openExternal('https://www.crysion.com/');
+            } else {
+                console.error('Electron shell module is not available.');
+            }
+        });
+    } else {
+        console.error('Get started button not found.');
+    }
+
+    if (demoAccountButton) {
+        demoAccountButton.addEventListener('click', () => {
+            if (window.electron) {
+                window.electron.ipcRenderer.send('login-demo');
+            } else {
+                console.error('Electron API not found.');
+            }
+        });
+    } else {
+        console.error('Demo account button not found.');
+    }    
 
     if (lightModeButtonSidebar) {
         lightModeButtonSidebar.addEventListener('click', () => {
@@ -224,6 +251,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     } else {
         console.error('Close button for error notification not found.');
+    }
+
+    // Sign Out Button Functionality
+    if (signOutButton) {
+        signOutButton.addEventListener('click', async () => {
+            console.log('Sign out button clicked');
+            if (window.electron) {
+                try {
+                    await window.electron.ipcRenderer.invoke('invalidate-session');
+                } catch (error) {
+                    console.error('Failed to invalidate session:', error);
+                }
+            } else {
+                console.error('Electron API not found.');
+            }
+        });
+    } else {
+        console.error('Sign out button not found.');
     }
 });
 
