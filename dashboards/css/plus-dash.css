@@ -43,8 +43,10 @@ body.light-mode {
     top: 50%;
     transform: translateY(-50%);
     box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
+    -ms-overflow-style: none;  /* Hides Scrollbar */
+    scrollbar-width: none
 }
 
 .logo-container {
