@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../node_modules/overlayscrollbars/styles/overlayscrollbars.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crysion - Dashboard</title>
@@ -13,67 +14,67 @@
                 <img src="../assets/logo/crysion-darkwtext.png" alt="Crysion Logo">
             </div>
             <div class="nav-links">
-                <a href="#" class="active">
+                <a href="#" data-content="dashboard" class="active">
                     <div class="icon-container">
                         <img src="../assets/icons/default.svg" alt="icon" class="icon">
                     </div>
                     Dashboard
                 </a>
-                <a href="#">
+                <a href="#" data-content="clients">
                     <div class="icon-container">
                         <img src="../assets/icons/default.svg" alt="icon" class="icon">
                     </div>
                     Clients
                 </a>
-                <a href="#">
+                <a href="#" data-content="payments">
                     <div class="icon-container">
                         <img src="../assets/icons/payments.svg" alt="icon" class="icon">
                     </div>
                     Payments
                 </a>
-                <a href="#">
+                <a href="#" data-content="projects">
                     <div class="icon-container">
                         <img src="../assets/icons/projects.svg" alt="icon" class="icon">
                     </div>
                     Projects
                 </a>
-                <a href="#">
+                <a href="#" data-content="time-tracking">
                     <div class="icon-container">
                         <img src="../assets/icons/default.svg" alt="icon" class="icon">
                     </div>
                     Time Tracking
                 </a>
-                <a href="#">
+                <a href="#" data-content="reports">
                     <div class="icon-container">
                         <img src="../assets/icons/chart.svg" alt="icon" class="icon">
                     </div>
                     Reports
                 </a>
-                <a href="#">
+                <a href="#" data-content="accounting">
                     <div class="icon-container">
                         <img src="../assets/icons/default.svg" alt="icon" class="icon">
                     </div>
                     Accounting
                 </a>
-                <a href="#">
+                <a href="#" data-content="inbox">
                     <div class="icon-container">
                         <img src="../assets/icons/default.svg" alt="icon" class="icon">
                     </div>
                     Inbox
                 </a>
-                <a href="#">
+                <a href="#" data-content="profile">
                     <div class="icon-container">
                         <img src="../assets/icons/default.svg" alt="icon" class="icon">
                     </div>
                     Profile
                 </a>
-                <a href="#">
+                <a href="#" data-content="team">
                     <div class="icon-container">
                         <img src="../assets/icons/default.svg" alt="icon" class="icon">
                     </div>
                     Team
                 </a>
-                <a href="#">
+                <a href="#" data-content="settings">
                     <div class="icon-container">
                         <img src="../assets/icons/default.svg" alt="icon" class="icon">
                     </div>
@@ -89,7 +90,7 @@
                 <button>Documentation</button> 
             </div>
             <a href="#" class="sign-out">
-                <img src="../assets/icons/default.svg" alt="Sign Out Icon"> Sign Out
+                <img src="../assets/icons/logout.svg" alt="Sign Out Icon"> Sign Out
             </a>
         </aside>
         <div class="content-box">
@@ -108,6 +109,33 @@
             </main>
         </div>
     </div>
+    <script type="module">
+        import { OverlayScrollbars } from '../node_modules/overlayscrollbars/overlayScrollbars.esm.js';
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebarElement = document.querySelector('.sidebar');
+    
+            if (sidebarElement) {
+                // Initialize OverlayScrollbars on the sidebar
+                OverlayScrollbars(sidebarElement, {
+                    overflowBehavior: {
+                        x: "hidden", // Ensures no horizontal scrollbar
+                        y: "scroll"  // Enables vertical scrollbar
+                    },
+                    scrollbars: {
+                    },
+                    callbacks: {
+                        onInitialized: (instance) => {
+                            const scrollbarContainer = instance.getElements();
+                            console.log('Scrollbar container:', scrollbarContainer);
+                        }
+                    }
+                });
+            } else {
+                console.error('Sidebar element not found!');
+            }
+        });
+    </script>
     <script src="js/plus.js"></script>
 </body>
 </html>

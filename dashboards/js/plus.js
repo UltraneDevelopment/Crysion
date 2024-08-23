@@ -3,8 +3,81 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightModeButton = document.getElementById('light-mode-button-sidebar');
     const darkModeButton = document.getElementById('dark-mode-button-sidebar');
     const signOutButton = document.querySelector('.sign-out');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const mainContent = document.querySelector('.main-content');
+    
+    // Function to update the main content box
+    function updateContent(contentId) {
+        let headerText = '';
+        switch(contentId) {
+            case 'dashboard':
+                headerText = 'Dashboard';
+                break;
+            case 'clients':
+                headerText = 'Clients';
+                break;
+            case 'payments':
+                headerText = 'Payments';
+                break;
+            case 'projects':
+                headerText = 'Projects';
+                break;
+            case 'time-tracking':
+                headerText = 'Time Tracking';
+                break;
+            case 'reports':
+                headerText = 'Reports';
+                break;
+            case 'accounting':
+                headerText = 'Accounting';
+                break;
+            case 'inbox':
+                headerText = 'Inbox';
+                break;
+            case 'profile':
+                headerText = 'Profile';
+                break;
+            case 'team':
+                headerText = 'Team';
+                break;
+            case 'settings':
+                headerText = 'Settings';
+                break;
+            default:
+                headerText = 'Welcome Back, John Doe.';
+        }
+        mainContent.innerHTML = `
+            <h1>${headerText}</h1>
+            <div class="card-container">
+                <div class="card"></div>
+                <div class="card"></div>
+                <div class="card"></div>
+                <div class="card"></div>
+                <div class="card"></div>
+                <div class="card"></div>
+                <div class="card"></div>
+                <div class="card"></div>
+            </div>
+        `;
+    }
 
-    // Application of Styles
+    // Function to set the active link
+    function setActiveLink(clickedLink) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        clickedLink.classList.add('active');
+    }
+
+    // Event listener for sidebar links
+    navLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const contentId = link.getAttribute('data-content');
+            setActiveLink(link);
+            updateContent(contentId);
+        });
+    });
+
+    // Existing theme functionality
     function setLightMode() {
         body.classList.remove('dark-mode');
         body.classList.add('light-mode');
@@ -25,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event listeners for theme buttons
     if (lightModeButton) {
         lightModeButton.addEventListener('click', setLightMode);
     }
@@ -33,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
         darkModeButton.addEventListener('click', setDarkMode);
     }
 
-    // Fetching Saved Preferences (Styles) & Applying
     async function applyInitialTheme() {
         try {
             if (window.electron) {
@@ -52,7 +123,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applyInitialTheme();
 
-    // Sign Out Functionality
+    document.addEventListener("DOMContentLoaded", function() {
+        OverlayScrollbars(document.querySelector(".sidebar"), {
+            scrollbars: {
+                visibility: "auto",
+            },
+            className: "os-theme-dark",
+        });
+    });
+
     if (signOutButton) {
         signOutButton.addEventListener('click', async () => {
             console.log('Sign out button clicked');

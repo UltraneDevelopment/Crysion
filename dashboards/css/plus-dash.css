@@ -38,15 +38,17 @@ body.light-mode {
     display: flex;
     flex-direction: column;
     border-radius: 50px;
-    position: fixed;
+    position: relative;
     left: 1.5%;
     top: 50%;
     transform: translateY(-50%);
     box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
-    -ms-overflow-style: none;  /* Hides Scrollbar */
-    scrollbar-width: none
+}
+
+.os-scrollbar-horizontal {
+    display: none !important;
 }
 
 .logo-container {
@@ -158,16 +160,15 @@ body.light-mode {
 }
 
 .content-box {
-    width: 73.5%;
+    width: 75%;
     height: 90%;
     padding: 20px; 
     background-color: #F5F5F7; 
     border-radius: 50px; 
     box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-    margin-top: 20px; 
+    margin-top: 1.6%; 
     position: fixed;
     right: 1%;
-    top: -0.25%;
 }
 
 .main-content {
