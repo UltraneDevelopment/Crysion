@@ -16,6 +16,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     const closeButton = document.getElementById('close-button');
     const errorNotification = document.getElementById('error-notification');
     const signOutButton = document.querySelector('.sign-out');
+    const closeBtn = document.getElementById('close-button');
+    const minimizeBtn = document.getElementById('minimize-button');
+    const maximizeBtn = document.getElementById('maximize-button');
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            console.log('Close button clicked');
+            window.electron.send('close-window');
+        });
+    }
+
+    if (minimizeBtn) {
+        minimizeBtn.addEventListener('click', () => {
+            console.log('Minimize button clicked');
+            window.electron.send('minimize-window');
+        });
+    }
+
+    if (maximizeBtn) {
+        maximizeBtn.addEventListener('click', () => {
+            console.log('Maximize button clicked');
+            window.electron.send('maximize-window');
+        });
+    }
+
 
     // Sidebar Functions
     function toggleSidebar() {

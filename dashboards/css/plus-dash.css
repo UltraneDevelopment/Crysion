@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 body, html {
     margin: 0;
     padding: 0;
@@ -24,6 +27,36 @@ body.light-mode {
     background-position: center center; 
 }
 
+/* Custom Close/Minimize/Maximise Buttons */
+
+.window-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px; /* Position the controls to the right */
+    display: flex;
+    gap: 10px; /* Add space between the buttons */
+}
+
+/* Style for each control button */
+.window-controls div {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#close-button {
+    background-color: #ff5f57;
+}
+
+#minimize-button {
+    background-color: #ffbd2e;
+}
+
+#maximize-button {
+    background-color: #28c840;
+}
+
 .dashboard-container {
     display: flex;
     height: 100vh;
@@ -45,6 +78,18 @@ body.light-mode {
     box-shadow: 4px 0 15px rgba(0,0,0,0.1);
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.dark-mode .sidebar {
+    background-color: #ffffff21; /* find a better colour */
+}
+
+.dark-mode #logoSettings {
+    content: url(../../assets/logo/crysion-lightwtext.png);
+}
+
+.light-mode #logoSettings {
+    content: url(../../assets/logo/crysion-darkwtext.png)
 }
 
 .os-scrollbar-horizontal {
@@ -85,6 +130,10 @@ body.light-mode {
     border-radius: 15px;
 }
 
+.dark-mode .nav-links a {
+    color: white;
+}
+
 .nav-links a {
     display: flex;
     align-items: center;
@@ -95,9 +144,9 @@ body.light-mode {
     border-radius: 15px;
     text-align: left;
     text-decoration: none;
-    font-weight: bold;
     transition: background-color 0.3s, transform 0.3s;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
 }
 
 .nav-links a:hover, .nav-links a.active {
@@ -107,10 +156,32 @@ body.light-mode {
     color: white;
 }
 
+.light-mode .nav-links a:hover, .nav-links a.active {
+    background-color: #7E868E;
+    color: white;
+}
+
+.dark-mode .nav-links a:hover, .nav-links a.active {
+    background-color: white;
+    color: black;
+}
+
+
+.dark-mode .nav-links a:hover .icon-container,
+.dark-mode .nav-links a.active .icon-container {
+    background-color: #4FD1C5;
+}
+
+.dark-mode .nav-links a:hover .icon-container .icon,
+.dark-mode .nav-links a.active .icon-container .icon {
+    content: url(../../assets/icons/iconFilledWhite/default.svg);
+    fill: white !important;
+}
+
 .support-container {
     margin-top: 10%;
     width: 80%;
-    height: 30%;
+    height: 25%;
     background-color: #4FD1C5;
     border-radius: 15px;
     display: flex;
@@ -163,7 +234,7 @@ body.light-mode {
     width: 75%;
     height: 90%;
     padding: 20px; 
-    background-color: #F5F5F7; 
+    background-color: #f7f5f5; 
     border-radius: 50px; 
     box-shadow: 4px 0 15px rgba(0,0,0,0.1);
     margin-top: 1.6%; 
@@ -171,9 +242,40 @@ body.light-mode {
     right: 1%;
 }
 
+.dark-mode .content-box {
+    background-color: #ffffff21; /* find a better colour */
+    color: white;
+}
+
 .main-content {
     padding: 20px;
 }
+
+.main-content h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 45px;
+    margin-left: 0%;
+    margin-top: 1.5%;
+}
+
+.client-counter {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.client-counter p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.client-counter span {
+    color: #4FD1C5; /* Highlight color */
+}
+
 
 .card-container {
     display: grid;
@@ -201,15 +303,27 @@ body.light-mode {
     border: none;
 }
 
+.dark-mode .sign-out {
+    color: white;
+}
+
 .sign-out:hover {
     transform: translateY(-2px);
-    color: gray;
+    color: gray;    
+}
+
+.dark-mode .sign-out:hover {
+    color: #4FD1C5;
 }
 
 .sign-out img {
     margin-right: 10px;
     width: 20px;
     height: 20px;
+}
+
+.dark-mode .sign-out img {
+    content: url(../../assets/icons/iconFilledWhite/logout.svg);
 }
 
 @media (max-width: 768px) {

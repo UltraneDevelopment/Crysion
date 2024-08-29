@@ -3,6 +3,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   const lightModeButton = document.getElementById('light-mode-button');
   const darkModeButton = document.getElementById('dark-mode-button');
   const backButton = document.getElementById('back-button');
+  const closeBtn = document.getElementById('close-button');
+  const minimizeBtn = document.getElementById('minimize-button');
+  const maximizeBtn = document.getElementById('maximize-button');
+
+  if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+          console.log('Close button clicked');
+          window.electron.send('close-window');
+      });
+  }
+
+  if (minimizeBtn) {
+      minimizeBtn.addEventListener('click', () => {
+          console.log('Minimize button clicked');
+          window.electron.send('minimize-window');
+      });
+  }
+
+  if (maximizeBtn) {
+      maximizeBtn.addEventListener('click', () => {
+          console.log('Maximize button clicked');
+          window.electron.send('maximize-window');
+      });
+  }
 
   // Retrieve and apply the initial theme from stored preferences
   if (window.electron) {

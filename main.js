@@ -50,7 +50,7 @@ function createWindow() {
     height: initialHeight,
     minWidth: initialWidth,
     minHeight: initialHeight,
-    frame: true,
+    frame: false,
     autoHideMenuBar: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -61,7 +61,7 @@ function createWindow() {
   });
 
   mainWindow.loadFile('index.html');
-
+  
   // Send Version Number
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.webContents.send('app-version', packageJson.version);
@@ -95,6 +95,26 @@ function createWindow() {
     });
   });
 }
+
+    // Handle window control events
+    ipcMain.on('close-window', () => {
+      console.log('Received close-window event');
+      mainWindow.close();
+  });
+
+  ipcMain.on('minimize-window', () => {
+      console.log('Received minimize-window event');
+      mainWindow.minimize();
+  });
+
+  ipcMain.on('maximize-window', () => {
+      console.log('Received maximize-window event');
+      if (mainWindow.isMaximized()) {
+          mainWindow.unmaximize();
+      } else {
+          mainWindow.maximize();
+      }
+  });
 
 app.whenReady().then(() => {
   createWindow();

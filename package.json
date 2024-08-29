@@ -1,6 +1,6 @@
 {
   "name": "crysion",
-  "version": "1.2.5",
+  "version": "1.2.7",
   "description": "Crysion - A freelancer management platform.",
   "main": "main.js",
   "scripts": {
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "electron-store": "^10.0.0",
     "fetch": "^1.1.0",
     "mysql2": "^3.11.0",
     "overlayscrollbars": "^2.10.0"

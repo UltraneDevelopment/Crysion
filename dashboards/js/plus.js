@@ -5,60 +5,141 @@ document.addEventListener('DOMContentLoaded', () => {
     const signOutButton = document.querySelector('.sign-out');
     const navLinks = document.querySelectorAll('.nav-links a');
     const mainContent = document.querySelector('.main-content');
-    
+    const clientList = document.querySelector('.client-list');
+
+    // Function to fetch client data from the server
+    async function fetchClientData() {
+        try {
+            const response = await fetch('http://213.165.84.44:3000/clients');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching client data:', error);
+        }
+    }
+
+    // Function to update the client list and client counter
+    async function updateClientList() {
+        try {
+            const clients = await fetchClientData();
+            if (clients) {
+                // Update the client counter
+                document.getElementById('current-clients').textContent = clients.length;
+
+                // Update the client list display
+                if (clientList) {
+                    clientList.innerHTML = clients.map(client => `<div>${client.firstName}</div>`).join('');
+                }
+            }
+        } catch (error) {
+            console.error('Error updating client list:', error);
+        }
+    }
+
     // Function to update the main content box
     function updateContent(contentId) {
         let headerText = '';
+        let contentHTML = '';
+
         switch(contentId) {
             case 'dashboard':
                 headerText = 'Dashboard';
+                contentHTML = `
+                    <div class="card-container">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                    </div>
+                `;
                 break;
             case 'clients':
                 headerText = 'Clients';
+                contentHTML = `
+                    <div class="client-counter">
+                        <p>Current Clients: <span id="current-clients">0</span> / 150</p>
+                    </div>
+                    <div class="client-list"></div>
+                `;
+                updateClientList(); // Fetch and display client data
                 break;
             case 'payments':
                 headerText = 'Payments';
+                contentHTML = `
+                    <div class="card-container">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                    </div>
+                `;
                 break;
             case 'projects':
                 headerText = 'Projects';
+                contentHTML = `
+                    <div class="card-container">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                    </div>
+                `
                 break;
             case 'time-tracking':
                 headerText = 'Time Tracking';
-                break;
-            case 'reports':
-                headerText = 'Reports';
-                break;
-            case 'accounting':
-                headerText = 'Accounting';
-                break;
-            case 'inbox':
-                headerText = 'Inbox';
-                break;
-            case 'profile':
-                headerText = 'Profile';
-                break;
-            case 'team':
-                headerText = 'Team';
-                break;
-            case 'settings':
-                headerText = 'Settings';
+                contentHTML = `
+                    <div class="card-container">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                    </div>
+                `
                 break;
             default:
                 headerText = 'Welcome Back, John Doe.';
+                contentHTML = `
+                    <div class="card-container">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                    </div>
+                `;
         }
+
         mainContent.innerHTML = `
             <h1>${headerText}</h1>
-            <div class="card-container">
-                <div class="card"></div>
-                <div class="card"></div>
-                <div class="card"></div>
-                <div class="card"></div>
-                <div class="card"></div>
-                <div class="card"></div>
-                <div class="card"></div>
-                <div class="card"></div>
-            </div>
+            ${contentHTML}
         `;
+
+        // Ensure client list is updated when clients section is loaded
+        if (contentId === 'clients') {
+            updateClientList();
+        }
     }
 
     // Function to set the active link
