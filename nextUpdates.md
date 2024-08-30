@@ -1,17 +1,17 @@
-# Notes for v1.2.9
+# Notes for v1.3.0
 
 # Next Updates To Do (Quick Notes)
 
-- Setup backend client database for the client panel on dashboard 
+- Setup backend client database for the client panel on dashboard [DONE]
 
     - Database Setup [DONE]
-    - server.js Setup (API) [DONE?]
+    - server.js Setup (API) [DONE]
 
 - Setup backend integration with frontend (software) for clients to be shown on dashboard [Work In Progress]
 - Add current clients / maximum clients to clients panel [Work In Progress]
-- Add feature to add new clients onto the database from the frontend 
+- Add feature to add new clients onto the database from the frontend [Work In Progress]
 - Begin development on the settings tab (both front and backend) so users can customise their experience, integrate other services
-    (stripe .etc.) as needed.
+    (stripe .etc.) as needed. [Work In Progress]
 
 # Next Updates To Do (In Detail)
 

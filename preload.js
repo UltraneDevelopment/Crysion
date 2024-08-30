@@ -9,15 +9,19 @@ contextBridge.exposeInMainWorld('electron', {
   },
 
   // Method to set preferences
+  
   setPreferences: (preferences) => ipcRenderer.invoke('set-preferences', preferences),
 
   // Method to navigate between pages
+
   navigate: (page) => ipcRenderer.send('navigate', page),
 
   // Method to handle theme change from main process
+
   setTheme: (callback) => ipcRenderer.on('set-theme', callback),
 
   // Method to get preferences
+
   getPreferences: () => ipcRenderer.invoke('get-preferences'),
 
   // Method to invoke new session
