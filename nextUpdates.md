@@ -1,11 +1,11 @@
-# Notes for v1.2.8
+# Notes for v1.2.9
 
 # Next Updates To Do (Quick Notes)
 
 - Setup backend client database for the client panel on dashboard 
 
     - Database Setup [DONE]
-    - server.js Setup (API) [NOT STARTED]
+    - server.js Setup (API) [DONE?]
 
 - Setup backend integration with frontend (software) for clients to be shown on dashboard [Work In Progress]
 - Add current clients / maximum clients to clients panel [Work In Progress]

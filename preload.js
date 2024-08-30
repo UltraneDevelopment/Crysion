@@ -20,8 +20,17 @@ contextBridge.exposeInMainWorld('electron', {
   // Method to get preferences
   getPreferences: () => ipcRenderer.invoke('get-preferences'),
 
-  // Method to invalidate sessions
-  invalidateSession: () => ipcRenderer.send('invalidate-session'),
+  // Method to invoke new session
+
+  getSession: () => ipcRenderer.invoke('get-session'),
+
+  // Method to set session
+
+  setSession: (data) => ipcRenderer.invoke('set-session', data),
+
+  // Method to invalidate session
+
+  invalidateSession: () => ipcRenderer.invoke('invalidate-session'),
 
   // Method to send back to sign in
 

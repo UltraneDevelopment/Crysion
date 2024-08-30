@@ -234,8 +234,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (result.message === 'Login successful') {
                     // Retrieve the plan type from the response
                     const userPlanType = result.planType;
+                    const token = result.token;
 
                     console.log('User logged in with plan type:', userPlanType);
+
+                    // Store session data in main process
+
+                    window.electron.setSession({ token, plan: userPlanType});
 
                     // Redirect user based on plan type
                     switch (userPlanType) {

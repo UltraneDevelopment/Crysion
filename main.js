@@ -4,11 +4,14 @@ const fs = require('fs');
 const packageJson = require('./package.json');
 
 let mainWindow;
+let sessionData = {}; // Initialize session data storage
+
 const preferencesPath = path.join(app.getPath('userData'), 'preferences.json');
 const defaultPreferences = { theme: 'light' };
 
-app.disableHardwareAcceleration();
+app.disableHardwareAcceleration(); // Optional, based on your application's needs
 
+// Read and write preferences
 function readPreferences() {
   try {
     if (fs.existsSync(preferencesPath)) {
@@ -29,6 +32,7 @@ function writePreferences(preferences) {
   }
 }
 
+// Apply theme based on preference
 function applyThemeToPage(theme) {
   if (theme === 'dark') {
     mainWindow.webContents.send('set-theme', 'dark');
@@ -39,18 +43,19 @@ function applyThemeToPage(theme) {
   }
 }
 
+// Create the main window
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
   const initialWidth = Math.round(width * 0.75);   // 75% of screen width
-  const initialHeight = Math.round(height * 0.85); // 80% of screen height
+  const initialHeight = Math.round(height * 0.85); // 85% of screen height
 
   mainWindow = new BrowserWindow({
     width: initialWidth,
     height: initialHeight,
     minWidth: initialWidth,
     minHeight: initialHeight,
-    frame: false,
+    frame: true,
     autoHideMenuBar: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -61,8 +66,8 @@ function createWindow() {
   });
 
   mainWindow.loadFile('index.html');
-  
-  // Send Version Number
+
+  // Send the application version to the renderer
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.webContents.send('app-version', packageJson.version);
   });
@@ -75,6 +80,7 @@ function createWindow() {
     applyThemeToPage(nativeTheme.themeSource);
   });
 
+  // Content Security Policy
   mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
     const csp = `
       default-src 'self';
@@ -96,40 +102,14 @@ function createWindow() {
   });
 }
 
-    // Handle window control events
-    ipcMain.on('close-window', () => {
-      console.log('Received close-window event');
-      mainWindow.close();
-  });
-
-  ipcMain.on('minimize-window', () => {
-      console.log('Received minimize-window event');
-      mainWindow.minimize();
-  });
-
-  ipcMain.on('maximize-window', () => {
-      console.log('Received maximize-window event');
-      if (mainWindow.isMaximized()) {
-          mainWindow.unmaximize();
-      } else {
-          mainWindow.maximize();
-      }
-  });
-
-app.whenReady().then(() => {
-  createWindow();
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
+// Handle IPC calls
+ipcMain.handle('get-session', () => sessionData);
+ipcMain.handle('set-session', (event, data) => {
+  sessionData = data; // Update session data
 });
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+ipcMain.handle('invalidate-session', () => {
+  sessionData = {}; // Clear session data
+  mainWindow.loadFile('index.html'); // Redirect to login page
 });
 
 ipcMain.handle('get-preferences', async () => {
@@ -170,24 +150,54 @@ ipcMain.on('navigate', (event, page) => {
   mainWindow.loadFile(filePath);
 });
 
-ipcMain.handle('invalidate-session', async () => {
-  console.log('Invalidating session...');
-  await mainWindow.webContents.session.clearStorageData();
-  console.log('Session cleared, navigating to sign-in page...');
-  mainWindow.loadFile('index.html');
-});
-
 ipcMain.handle('navigate-to-sign-in', async () => {
   console.log('Navigating to sign-in page...');
   mainWindow.loadFile('index.html');
 });
 
-ipcMain.on('login-demo', (event) => {
+ipcMain.on('login-demo', () => {
   // Load the demo dashboard directly
   mainWindow.loadFile(path.join(__dirname, 'dashboards/demo-dashboard.html'));
 });
 
-// External URL Open
+// Handle window control events
+ipcMain.on('close-window', () => {
+  console.log('Received close-window event');
+  mainWindow.close();
+});
+
+ipcMain.on('minimize-window', () => {
+  console.log('Received minimize-window event');
+  mainWindow.minimize();
+});
+
+ipcMain.on('maximize-window', () => {
+  console.log('Received maximize-window event');
+  if (mainWindow.isMaximized()) {
+    mainWindow.unmaximize();
+  } else {
+    mainWindow.maximize();
+  }
+});
+
+// Open external URLs
 ipcMain.handle('open-external', (event, url) => {
   shell.openExternal(url);
+});
+
+// Initialize the application
+app.whenReady().then(() => {
+  createWindow();
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });

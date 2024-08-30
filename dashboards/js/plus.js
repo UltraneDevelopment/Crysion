@@ -6,11 +6,77 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav-links a');
     const mainContent = document.querySelector('.main-content');
     const clientList = document.querySelector('.client-list');
+    const closeBtn = document.getElementById('close-button');
+    const minimizeBtn = document.getElementById('minimize-button');
+    const maximizeBtn = document.getElementById('maximize-button');
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            console.log('Close button clicked');
+            window.electron.send('close-window');
+        });
+    }
+
+    if (minimizeBtn) {
+        minimizeBtn.addEventListener('click', () => {
+            console.log('Minimize button clicked');
+            window.electron.send('minimize-window');
+        });
+    }
+
+    if (maximizeBtn) {
+        maximizeBtn.addEventListener('click', () => {
+            console.log('Maximize button clicked');
+            window.electron.send('maximize-window');
+        });
+    }
+
+    // Function to fetch session data
+
+    async function fetchSession() {
+        try {
+            const session = await window.electron.getSession();
+            if (!session || !session.token) {
+                throw new Error('No session token found.');
+            }
+            return session.token;
+        } catch (error) {
+            console.error('Error fetching session:', error);
+            await window.electron.navigateToSignIn();
+            console.log('Successfully navigated to sign-in page');
+        }
+    }
+
+    // Function to make authenticated requests
+
+    async function makeAuthenticatedRequest(url, options = {}) {
+        const token = await fetchSession();
+        if (!token) {
+            throw new Error('No session token found.');
+        }
+
+        options.headers = {
+            ...options.headers,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+
+        try {
+            const response = await fetch(url, options);
+            if (response.status === 401) {
+                throw new Error('Unauthorized. Redirecting to sign-in.');
+            }
+            return response;
+        } catch (error) {
+            console.error('Error making authenticated request:', error);
+            window.electron.navigateToSignIn()
+        }
+    }
 
     // Function to fetch client data from the server
     async function fetchClientData() {
         try {
-            const response = await fetch('http://213.165.84.44:3000/clients');
+            const response = await makeAuthenticatedRequest('http://213.165.84.44:3000/clients');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -27,7 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const clients = await fetchClientData();
             if (clients) {
                 // Update the client counter
-                document.getElementById('current-clients').textContent = clients.length;
+                if (currentClients) {
+                    currentClients.textContent = clients.length;
+                }
 
                 // Update the client list display
                 if (clientList) {
@@ -157,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateContent(contentId);
         });
     });
-
+    
     // Existing theme functionality
     function setLightMode() {
         body.classList.remove('dark-mode');
