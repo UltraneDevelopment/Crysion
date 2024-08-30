@@ -31,81 +31,76 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Function to fetch session data
-
     async function fetchSession() {
         try {
-            const session = await window.electron.getSession();
-            if (!session || !session.token) {
-                throw new Error('No session token found.');
-            }
-            return session.token;
-        } catch (error) {
-            console.error('Error fetching session:', error);
-            await window.electron.navigateToSignIn();
-            console.log('Successfully navigated to sign-in page');
-        }
-    }
-
-    // Function to make authenticated requests
-
-    async function makeAuthenticatedRequest(url, options = {}) {
-        const token = await fetchSession();
-        if (!token) {
+          const session = await window.electron.getSession();
+          console.log('Fetched session:', session); // Debugging line
+          if (!session || !session.token) {
             throw new Error('No session token found.');
+          }
+          return session.token;
+        } catch (error) {
+          console.error('Error fetching session:', error);
+          window.electron.navigate('index.html'); // Redirect to sign-in page
         }
-
+      }
+      
+      async function makeAuthenticatedRequest(url, options = {}) {
+        const token = await fetchSession();
+        console.log('Using token:', token); // Debugging line
+        if (!token) {
+          throw new Error('No session token found.');
+        }
+      
         options.headers = {
-            ...options.headers,
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+          ...options.headers,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         };
-
+      
         try {
-            const response = await fetch(url, options);
-            if (response.status === 401) {
-                throw new Error('Unauthorized. Redirecting to sign-in.');
-            }
-            return response;
+          const response = await fetch(url, options);
+          console.log('Response:', response); // Debugging line
+          if (response.status === 401) {
+            throw new Error('Unauthorized. Redirecting to sign-in.');
+          }
+          return response;
         } catch (error) {
-            console.error('Error making authenticated request:', error);
-            window.electron.navigateToSignIn()
+          console.error('Error making authenticated request:', error);
+          errorNotification.classList.add('show');
+          window.electron.navigate('index.html');
         }
-    }
-
-    // Function to fetch client data from the server
-    async function fetchClientData() {
+      }
+      
+      async function fetchClientData() {
         try {
-            const response = await makeAuthenticatedRequest('http://213.165.84.44:3000/clients');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            return data;
+          const response = await makeAuthenticatedRequest('http://213.165.84.44:3000/clients');
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          return data;
         } catch (error) {
-            console.error('Error fetching client data:', error);
+          console.error('Error fetching client data:', error);
         }
-    }
-
-    // Function to update the client list and client counter
-    async function updateClientList() {
+      }
+      
+      async function updateClientList() {
         try {
-            const clients = await fetchClientData();
-            if (clients) {
-                // Update the client counter
-                if (currentClients) {
-                    currentClients.textContent = clients.length;
-                }
-
-                // Update the client list display
-                if (clientList) {
-                    clientList.innerHTML = clients.map(client => `<div>${client.firstName}</div>`).join('');
-                }
+          const clients = await fetchClientData();
+          if (clients) {
+            // Update the client counter
+            document.getElementById('current-clients').textContent = clients.length;
+      
+            // Update the client list display
+            if (clientList) {
+              clientList.innerHTML = clients.map(client => `<div>${client.firstName}</div>`).join('');
             }
+          }
         } catch (error) {
-            console.error('Error updating client list:', error);
+          console.error('Error updating client list:', error);
         }
-    }
+      }
 
     // Function to update the main content box
     function updateContent(contentId) {

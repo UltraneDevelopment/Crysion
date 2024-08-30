@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     // Store session data in main process
 
-                    window.electron.setSession({ token, plan: userPlanType});
+                    await window.electron.setSession({ token, plan: userPlanType });
 
                     // Redirect user based on plan type
                     switch (userPlanType) {

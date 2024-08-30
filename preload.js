@@ -26,7 +26,7 @@ contextBridge.exposeInMainWorld('electron', {
 
   // Method to set session
 
-  setSession: (data) => ipcRenderer.invoke('set-session', data),
+  setSession: (session) => ipcRenderer.invoke('set-session', session),
 
   // Method to invalidate session
 

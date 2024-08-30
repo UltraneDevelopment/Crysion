@@ -103,13 +103,19 @@ function createWindow() {
 }
 
 // Handle IPC calls
-ipcMain.handle('get-session', () => sessionData);
+
 ipcMain.handle('set-session', (event, data) => {
-  sessionData = data; // Update session data
+  sessionData = data;
+  console.log('Session set:', sessionData); // Debugging line
+});
+
+ipcMain.handle('get-session', () => {
+  console.log('Session retrieved:', sessionData); // Debugging line
+  return sessionData;
 });
 ipcMain.handle('invalidate-session', () => {
-  sessionData = {}; // Clear session data
-  mainWindow.loadFile('index.html'); // Redirect to login page
+  sessionData = {};
+  mainWindow.loadFile('index.html');
 });
 
 ipcMain.handle('get-preferences', async () => {
