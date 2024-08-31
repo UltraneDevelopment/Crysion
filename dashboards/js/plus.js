@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.getElementById('close-button');
     const minimizeBtn = document.getElementById('minimize-button');
     const maximizeBtn = document.getElementById('maximize-button');
+    const addClientBtn = document.getElementById('add-client-btn');
 
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
@@ -33,81 +34,230 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchSession() {
         try {
-          const session = await window.electron.getSession();
-          console.log('Fetched session:', session); // Debugging line
-          if (!session || !session.token) {
-            throw new Error('No session token found.');
-          }
-          return session.token;
+            const session = await window.electron.getSession();
+            console.log('Fetched session:', session); // Debugging line
+            if (!session || !session.token) {
+                throw new Error('No session token found.');
+            }
+            return session.token;
         } catch (error) {
-          console.error('Error fetching session:', error);
-          window.electron.navigate('index.html'); // Redirect to sign-in page
+            console.error('Error fetching session:', error);
+            window.electron.navigate('index.html'); // Redirect to sign-in page
         }
-      }
-      
-      async function makeAuthenticatedRequest(url, options = {}) {
+    }
+
+    async function makeAuthenticatedRequest(url, options = {}) {
         const token = await fetchSession();
         console.log('Using token:', token); // Debugging line
         if (!token) {
-          throw new Error('No session token found.');
+            throw new Error('No session token found.');
         }
-      
-        options.headers = {
-          ...options.headers,
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        };
-      
-        try {
-          const response = await fetch(url, options);
-          console.log('Response:', response); // Debugging line
-          if (response.status === 401) {
-            throw new Error('Unauthorized. Redirecting to sign-in.');
-          }
-          return response;
-        } catch (error) {
-          console.error('Error making authenticated request:', error);
-          errorNotification.classList.add('show');
-          window.electron.navigate('index.html');
-        }
-      }
-      
-      async function fetchClientData() {
-        try {
-          const response = await makeAuthenticatedRequest('http://213.165.84.44:3000/clients');
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const data = await response.json();
-          return data;
-        } catch (error) {
-          console.error('Error fetching client data:', error);
-        }
-      }
-      
-      async function updateClientList() {
-        try {
-          const clients = await fetchClientData();
-          if (clients) {
-            // Update the client counter
-            document.getElementById('current-clients').textContent = clients.length;
-      
-            // Update the client list display
-            if (clientList) {
-              clientList.innerHTML = clients.map(client => `<div>${client.firstName}</div>`).join('');
-            }
-          }
-        } catch (error) {
-          console.error('Error updating client list:', error);
-        }
-      }
 
+        options.headers = {
+            ...options.headers,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+
+        try {
+            const response = await fetch(url, options);
+            console.log('Response:', response); // Debugging line
+            if (response.status === 401) {
+                throw new Error('Unauthorized. Redirecting to sign-in.');
+            }
+            return response;
+        } catch (error) {
+            console.error('Error making authenticated request:', error);
+            errorNotification.classList.add('show');
+            window.electron.navigate('index.html');
+        }
+    }
+
+    async function fetchClientData() {
+        try {
+            const response = await makeAuthenticatedRequest('http://213.165.84.44:3000/clients');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log('Fetched client data:', data); // Debugging line
+            return data.clients; // Access clients array directly
+        } catch (error) {
+            console.error('Error fetching client data:', error);
+        }
+    }
+
+    async function updateClientList() {
+        try {
+            const clients = await fetchClientData();
+            // Update the client counter
+            const clientCounterElement = document.getElementById('current-clients');
+            if (clientCounterElement) {
+                clientCounterElement.textContent = clients.length;
+            }
+    
+            // Update the client list display
+            const clientListElement = document.querySelector('.client-list');
+             if (clientListElement) {
+                clientListElement.innerHTML = clients.map(client => `
+                <div class="client-card">
+                    <p><strong>Name:</strong> ${client.client_firstname} ${client.client_surname}</p>
+                    <p>
+                        <button class="info-button" data-type="email" data-info="${client.client_email}">Show Email</button>
+                        <button class="info-button" data-type="phone" data-info="${client.client_phonenumber}">Show Phone Number</button>
+                    </p>
+                </div>
+            `).join('');
+
+            // Add the button to open the new client modal
+            document.querySelector('.main-content').insertAdjacentHTML('beforeend', `
+                <button id="open-new-client-modal" class="open-modal-button">Add New Client</button>
+            `);
+
+            // Inject modal HTML
+            document.body.insertAdjacentHTML('beforeend', `
+                <div id="newClientModal-overlay" class="modal-overlay"></div>
+                <div id="newClientModal" class="modal">
+                    <div class="modal-header">
+                        <h2>Add New Client</h2>
+                    </div>
+                    <div class="modal-body">
+                        <form id="newClientForm">
+                            <label for="first_name">First Name:</label>
+                            <input type="text" id="first_name" name="first_name" required>
+
+                            <label for="surname">Surname:</label>
+                            <input type="text" id="surname" name="surname" required>
+
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+
+                            <label for="phone">Phone:</label>
+                            <input type="tel" id="phone" name="phone" required>
+
+                            <button type="submit">Submit</button>
+                            <button type="button" id="cancel-new-client">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            `);
+
+            // Attach click event listener to the "Add New Client" button
+            document.getElementById('open-new-client-modal').addEventListener('click', () => {
+                document.getElementById('newClientModal').classList.add('show');
+                document.getElementById('newClientModal-overlay').classList.add('show');
+            });
+
+            // Attach click event listener to the cancel button
+            document.getElementById('cancel-new-client').addEventListener('click', () => {
+                document.getElementById('newClientModal').classList.remove('show');
+                document.getElementById('newClientModal-overlay').classList.remove('show');
+            });
+
+            // Attach click event listener to the overlay to close modal when clicking outside
+            document.getElementById('newClientModal-overlay').addEventListener('click', () => {
+                document.getElementById('newClientModal').classList.remove('show');
+                document.getElementById('newClientModal-overlay').classList.remove('show');
+            });
+
+            // Attach submit event listener to the form
+            document.getElementById('newClientForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const formData = new FormData(event.target);
+                const data = {
+                    first_name: formData.get('first_name'),
+                    surname: formData.get('surname'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone')
+                };
+
+                try {
+                    const response = await makeAuthenticatedRequest('http://213.165.84.44:3000/clients', {
+                        method: 'POST',
+                        body: JSON.stringify(data)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to add client');
+                    }
+
+                    // Close the modal and update the client list
+                    document.getElementById('newClientModal').classList.remove('show');
+                    document.getElementById('newClientModal-overlay').classList.remove('show');
+                    await updateClientList();
+                } catch (error) {
+                    console.error('Error adding client:', error);
+                }
+            });
+            document.body.insertAdjacentHTML('beforeend', `
+                <div id="modal-overlay" class="modal-overlay"></div>
+                <div id="modal" class="modal">
+                    <div id="modal-header">Header</div>
+                    <div id="modal-content">Content</div>
+                    <div id="modal-buttons">
+                        <button id="copy-modal" class="modal-button">Copy</button>
+                        <button id="close-modal" class="modal-button">Close</button>
+                    </div>
+                </div>
+            `);
+
+            // Attach click event listeners to all info buttons
+            document.querySelectorAll('.info-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const type = button.getAttribute('data-type');
+                    const info = button.getAttribute('data-info');
+                    
+                    // Set modal content and header
+                    document.querySelector('#modal-header').textContent = type === 'email' ? 'Email' : 'Phone Number';
+                    document.querySelector('#modal-content').textContent = info;
+                    
+                    // Show the modal
+                    document.querySelector('#modal').classList.add('show');
+                    document.querySelector('#modal-overlay').classList.add('show');
+                    
+                    // Reset the modal to its default state
+                    document.querySelector('#copy-modal').style.display = 'block';
+                    document.querySelector('#modal-header').textContent = type === 'email' ? 'Email' : 'Phone Number';
+                    document.querySelector('#modal-content').textContent = info;
+                });
+            });
+
+            // Attach click event listener to the close button
+            document.querySelector('#close-modal').addEventListener('click', () => {
+                document.querySelector('#modal').classList.remove('show');
+                document.querySelector('#modal-overlay').classList.remove('show');
+            });
+
+            // Attach click event listener to the copy button
+            document.querySelector('#copy-modal').addEventListener('click', () => {
+                const content = document.querySelector('#modal-content').textContent;
+                navigator.clipboard.writeText(content).then(() => {
+                    // Change modal content and header after copying
+                    document.querySelector('#modal-header').textContent = 'Copied!';
+                    document.querySelector('#modal-content').textContent = 'Copied to clipboard';
+                    document.querySelector('#copy-modal').style.display = 'none'; // Hide the copy button
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+
+            // Attach click event listener to the overlay to close modal when clicking outside
+            document.querySelector('#modal-overlay').addEventListener('click', () => {
+                document.querySelector('#modal').classList.remove('show');
+                document.querySelector('#modal-overlay').classList.remove('show');
+            });
+        }
+    } catch (error) {
+        console.error('Error updating client list:', error);
+    }
+    }
+    
     // Function to update the main content box
-    function updateContent(contentId) {
+    async function updateContent(contentId) {
         let headerText = '';
         let contentHTML = '';
 
-        switch(contentId) {
+        switch (contentId) {
             case 'dashboard':
                 headerText = 'Dashboard';
                 contentHTML = `
@@ -123,16 +273,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
                 break;
-            case 'clients':
-                headerText = 'Clients';
-                contentHTML = `
-                    <div class="client-counter">
-                        <p>Current Clients: <span id="current-clients">0</span> / 150</p>
-                    </div>
-                    <div class="client-list"></div>
-                `;
-                updateClientList(); // Fetch and display client data
-                break;
+                case 'clients':
+                    headerText = 'Clients';
+                    contentHTML = `
+                        <div class="client-counter">
+                            <p>Current Clients: <span id="current-clients">0</span> / 150</p>
+                        </div>
+                        <div class="client-list"></div>
+                    `;
+                    document.querySelector('.main-content').innerHTML = contentHTML;
+                    await updateClientList(); // Ensure async update
+                    break;
             case 'payments':
                 headerText = 'Payments';
                 contentHTML = `
@@ -161,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="card"></div>
                         <div class="card"></div>
                     </div>
-                `
+                `;
                 break;
             case 'time-tracking':
                 headerText = 'Time Tracking';
@@ -176,7 +327,87 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="card"></div>
                         <div class="card"></div>
                     </div>
-                `
+                `;
+                break;
+            case 'reports':
+                headerText = 'Reports';
+                contentHTML = `
+                    <div class="card-container">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                    </div>
+                `;
+                break;
+            case 'accounting':
+                headerText = 'Accounting';
+                contentHTML = `
+                    <div class="card-container">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                    </div>
+                `;
+                break;
+            case 'inbox':
+                headerText = 'Inbox';
+                contentHTML = `
+                    <div class="card-container">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                    </div>
+                `;
+                break;
+            case 'profile':
+                headerText = 'Profile';
+                contentHTML = `
+                    <div class="card-container">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                    </div>
+                `;
+                break;
+            case 'team':
+                headerText = 'Team';
+                contentHTML = `
+                    <div class="card-container">
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                        <div class="card"></div>
+                    </div>
+                `;
+                break;
+            case 'settings':
+                headerText = 'Settings';
+                contentHTML = `
+                `;
                 break;
             default:
                 headerText = 'Welcome Back, John Doe.';
@@ -201,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ensure client list is updated when clients section is loaded
         if (contentId === 'clients') {
-            updateClientList();
+            await updateClientList(); // Ensure async update
         }
     }
 
@@ -220,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateContent(contentId);
         });
     });
-    
+
     // Existing theme functionality
     function setLightMode() {
         body.classList.remove('dark-mode');
@@ -267,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applyInitialTheme();
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         OverlayScrollbars(document.querySelector(".sidebar"), {
             scrollbars: {
                 visibility: "auto",
