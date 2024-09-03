@@ -90,168 +90,180 @@ document.addEventListener('DOMContentLoaded', () => {
     async function updateClientList() {
         try {
             const clients = await fetchClientData();
-            // Update the client counter
             const clientCounterElement = document.getElementById('current-clients');
             if (clientCounterElement) {
                 clientCounterElement.textContent = clients.length;
             }
     
-            // Update the client list display
             const clientListElement = document.querySelector('.client-list');
-             if (clientListElement) {
+            if (clientListElement) {
                 clientListElement.innerHTML = clients.map(client => `
-                <div class="client-card">
-                    <p><strong>Name:</strong> ${client.client_firstname} ${client.client_surname}</p>
-                    <p>
-                        <button class="info-button" data-type="email" data-info="${client.client_email}">Show Email</button>
-                        <button class="info-button" data-type="phone" data-info="${client.client_phonenumber}">Show Phone Number</button>
-                    </p>
-                </div>
-            `).join('');
-
-            // Add the button to open the new client modal
-            document.querySelector('.main-content').insertAdjacentHTML('beforeend', `
-                <button id="open-new-client-modal" class="open-modal-button">Add New Client</button>
-            `);
-
-            // Inject modal HTML
-            document.body.insertAdjacentHTML('beforeend', `
-                <div id="newClientModal-overlay" class="modal-overlay"></div>
-                <div id="newClientModal" class="modal">
-                    <div class="modal-header">
-                        <h2>Add New Client</h2>
+                    <div class="client-card">
+                        <p><strong>Name:</strong> ${client.client_firstname} ${client.client_surname}</p>
+                        <p>
+                            <button class="info-button" data-type="email" data-info="${client.client_email}">Show Email</button>
+                            <button class="info-button" data-type="phone" data-info="${client.client_phonenumber}">Show Phone Number</button>
+                        </p>
                     </div>
-                    <div class="modal-body">
-                        <form id="newClientForm">
-                            <label for="first_name">First Name:</label>
-                            <input type="text" id="first_name" name="first_name" required>
-
-                            <label for="surname">Surname:</label>
-                            <input type="text" id="surname" name="surname" required>
-
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
-
-                            <label for="phone">Phone:</label>
-                            <input type="tel" id="phone" name="phone" required>
-
-                            <button type="submit">Submit</button>
-                            <button type="button" id="cancel-new-client">Cancel</button>
-                        </form>
-                    </div>
-                </div>
-            `);
-
-            // Attach click event listener to the "Add New Client" button
-            document.getElementById('open-new-client-modal').addEventListener('click', () => {
-                document.getElementById('newClientModal').classList.add('show');
-                document.getElementById('newClientModal-overlay').classList.add('show');
-            });
-
-            // Attach click event listener to the cancel button
-            document.getElementById('cancel-new-client').addEventListener('click', () => {
-                document.getElementById('newClientModal').classList.remove('show');
-                document.getElementById('newClientModal-overlay').classList.remove('show');
-            });
-
-            // Attach click event listener to the overlay to close modal when clicking outside
-            document.getElementById('newClientModal-overlay').addEventListener('click', () => {
-                document.getElementById('newClientModal').classList.remove('show');
-                document.getElementById('newClientModal-overlay').classList.remove('show');
-            });
-
-            // Attach submit event listener to the form
-            document.getElementById('newClientForm').addEventListener('submit', async (event) => {
-                event.preventDefault();
-                const formData = new FormData(event.target);
-                const data = {
-                    first_name: formData.get('first_name'),
-                    surname: formData.get('surname'),
-                    email: formData.get('email'),
-                    phone: formData.get('phone')
-                };
-
-                try {
-                    const response = await makeAuthenticatedRequest('http://213.165.84.44:3000/clients', {
-                        method: 'POST',
-                        body: JSON.stringify(data)
+                `).join('');
+    
+                // Check if the button already exists
+                if (!document.getElementById('open-new-client-modal')) {
+                    // Add the button to open the new client modal
+                    document.querySelector('.main-content').insertAdjacentHTML('beforeend', `
+                        <button id="open-new-client-modal" class="open-modal-button">Add New Client</button>
+                    `);
+    
+                    // Attach click event listener to the "Add New Client" button
+                    document.getElementById('open-new-client-modal').addEventListener('click', () => {
+                        document.getElementById('newClientModal').classList.add('show');
+                        document.getElementById('newClientModal-overlay').classList.add('show');
                     });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to add client');
-                    }
-
-                    // Close the modal and update the client list
+                }
+    
+                // Inject modal HTML only if it doesn't exist
+                if (!document.getElementById('newClientModal')) {
+                    document.body.insertAdjacentHTML('beforeend', `
+                        <div id="newClientModal-overlay" class="modal-overlay"></div>
+                        <div id="newClientModal" class="modal">
+                            <div class="modal-header">
+                                <h2>Add New Client</h2>
+                            </div>
+                            <div class="modal-body">
+                                <form id="newClientForm">
+                                    <label for="first_name">First Name:</label>
+                                    <input type="text" id="first_name" name="first_name" required>
+    
+                                    <label for="surname">Surname:</label>
+                                    <input type="text" id="surname" name="surname" required>
+    
+                                    <label for="email">Email:</label>
+                                    <input type="email" id="email" name="email" required>
+    
+                                    <label for="phone">Phone:</label>
+                                    <input type="tel" id="phone" name="phone" required>
+    
+                                    <button type="submit">Submit</button>
+                                    <button type="button" id="cancel-new-client">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    `);
+                }
+    
+                // Attach click event listener to the cancel button
+                document.getElementById('cancel-new-client').addEventListener('click', () => {
                     document.getElementById('newClientModal').classList.remove('show');
                     document.getElementById('newClientModal-overlay').classList.remove('show');
-                    await updateClientList();
-                } catch (error) {
-                    console.error('Error adding client:', error);
-                }
-            });
-            document.body.insertAdjacentHTML('beforeend', `
-                <div id="modal-overlay" class="modal-overlay"></div>
-                <div id="modal" class="modal">
-                    <div id="modal-header">Header</div>
-                    <div id="modal-content">Content</div>
-                    <div id="modal-buttons">
-                        <button id="copy-modal" class="modal-button">Copy</button>
-                        <button id="close-modal" class="modal-button">Close</button>
-                    </div>
-                </div>
-            `);
-
-            // Attach click event listeners to all info buttons
-            document.querySelectorAll('.info-button').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const type = button.getAttribute('data-type');
-                    const info = button.getAttribute('data-info');
-                    
-                    // Set modal content and header
-                    document.querySelector('#modal-header').textContent = type === 'email' ? 'Email' : 'Phone Number';
-                    document.querySelector('#modal-content').textContent = info;
-                    
-                    // Show the modal
-                    document.querySelector('#modal').classList.add('show');
-                    document.querySelector('#modal-overlay').classList.add('show');
-                    
-                    // Reset the modal to its default state
-                    document.querySelector('#copy-modal').style.display = 'block';
-                    document.querySelector('#modal-header').textContent = type === 'email' ? 'Email' : 'Phone Number';
-                    document.querySelector('#modal-content').textContent = info;
                 });
-            });
-
-            // Attach click event listener to the close button
-            document.querySelector('#close-modal').addEventListener('click', () => {
-                document.querySelector('#modal').classList.remove('show');
-                document.querySelector('#modal-overlay').classList.remove('show');
-            });
-
-            // Attach click event listener to the copy button
-            document.querySelector('#copy-modal').addEventListener('click', () => {
-                const content = document.querySelector('#modal-content').textContent;
-                navigator.clipboard.writeText(content).then(() => {
-                    // Change modal content and header after copying
-                    document.querySelector('#modal-header').textContent = 'Copied!';
-                    document.querySelector('#modal-content').textContent = 'Copied to clipboard';
-                    document.querySelector('#copy-modal').style.display = 'none'; // Hide the copy button
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-            });
-
-            // Attach click event listener to the overlay to close modal when clicking outside
-            document.querySelector('#modal-overlay').addEventListener('click', () => {
-                document.querySelector('#modal').classList.remove('show');
-                document.querySelector('#modal-overlay').classList.remove('show');
-            });
-        }
-    } catch (error) {
-        console.error('Error updating client list:', error);
-    }
-    }
     
+                // Attach click event listener to the overlay to close modal when clicking outside
+                document.getElementById('newClientModal-overlay').addEventListener('click', () => {
+                    document.getElementById('newClientModal').classList.remove('show');
+                    document.getElementById('newClientModal-overlay').classList.remove('show');
+                });
+    
+                // Attach submit event listener to the form
+                document.getElementById('newClientForm').addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const formData = new FormData(event.target);
+                    const newClientData = {
+                        first_name: formData.get('first_name'),
+                        surname: formData.get('surname'),
+                        email: formData.get('email'),
+                        phone: formData.get('phone')
+                    };
+    
+                    // Check for duplicates by email and phone
+                    const existingClientEmails = clients.map(client => client.client_email);
+                    const existingClientPhones = clients.map(client => client.client_phonenumber);
+                    if (existingClientEmails.includes(newClientData.email) || existingClientPhones.includes(newClientData.phone)) {
+                        alert('A client with this email or phone number already exists.');
+                        return;
+                    }
+    
+                    try {
+                        const response = await makeAuthenticatedRequest('http://213.165.84.44:3000/clients', {
+                            method: 'POST',
+                            body: JSON.stringify(newClientData)
+                        });
+    
+                        if (!response.ok) {
+                            throw new Error('Failed to add client');
+                        }
+    
+                        // Close the modal and update the client list
+                        document.getElementById('newClientModal').classList.remove('show');
+                        document.getElementById('newClientModal-overlay').classList.remove('show');
+                        await updateClientList();
+                    } catch (error) {
+                        console.error('Error adding client:', error);
+                    }
+                });
+    
+                // Attach click event listeners to all info buttons
+                document.querySelectorAll('.info-button').forEach(button => {
+                    console.log('Attaching event listener to button:', button); // Debug log
+                    button.addEventListener('click', (event) => {
+                        const type = button.getAttribute('data-type');
+                        const info = button.getAttribute('data-info');
+                        
+                        // Ensure modal elements exist
+                        const modalHeader = document.querySelector('#modal-header');
+                        const modalContent = document.querySelector('#modal-content');
+                        const modal = document.querySelector('#modal');
+                        const modalOverlay = document.querySelector('#modal-overlay');
+                        const copyModal = document.querySelector('#copy-modal');
+    
+                        if (modalHeader && modalContent && modal && modalOverlay && copyModal) {
+                            // Set modal content and header
+                            modalHeader.textContent = type === 'email' ? 'Email' : 'Phone Number';
+                            modalContent.textContent = info;
+                            
+                            // Show the modal
+                            modal.classList.add('show');
+                            modalOverlay.classList.add('show');
+                            
+                            // Reset the modal to its default state
+                            copyModal.style.display = 'block';
+                            modalHeader.textContent = type === 'email' ? 'Email' : 'Phone Number';
+                            modalContent.textContent = info;
+                        } else {
+                            console.error('Modal elements not found');
+                        }
+                    });
+                });
+    
+                // Attach click event listener to the close button
+                document.querySelector('#close-modal').addEventListener('click', () => {
+                    document.querySelector('#modal').classList.remove('show');
+                    document.querySelector('#modal-overlay').classList.remove('show');
+                });
+    
+                // Attach click event listener to the copy button
+                document.querySelector('#copy-modal').addEventListener('click', () => {
+                    const content = document.querySelector('#modal-content').textContent;
+                    navigator.clipboard.writeText(content).then(() => {
+                        // Change modal content and header after copying
+                        document.querySelector('#modal-header').textContent = 'Copied!';
+                        document.querySelector('#modal-content').textContent = 'Copied to clipboard';
+                        document.querySelector('#copy-modal').style.display = 'none'; // Hide the copy button
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+                });
+    
+                // Attach click event listener to the overlay to close modal when clicking outside
+                document.querySelector('#modal-overlay').addEventListener('click', () => {
+                    document.querySelector('#modal').classList.remove('show');
+                    document.querySelector('#modal-overlay').classList.remove('show');
+                });
+            }
+        } catch (error) {
+            console.error('Error updating client list:', error);
+        }
+    }
+
     // Function to update the main content box
     async function updateContent(contentId) {
         let headerText = '';
@@ -280,6 +292,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p>Current Clients: <span id="current-clients">0</span> / 150</p>
                         </div>
                         <div class="client-list"></div>
+                        <div id="modal-overlay" class="modal-overlay"></div>
+                        <div id="modal" class="modal">
+                            <div class="modal-header">
+                                <h2 id="modal-header">Header</h2>
+                            </div>
+                            <div class="modal-body">
+                                <p id="modal-content">Content</p>
+                                <button id="copy-modal">Copy</button>
+                                <button id="close-modal">Close</button>
+                            </div>
+                        </div>
                     `;
                     document.querySelector('.main-content').innerHTML = contentHTML;
                     await updateClientList(); // Ensure async update

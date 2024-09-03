@@ -7,8 +7,6 @@
 
 # Next Updates To Do (In Detail)
 
-- Allow the user to add a new client onto the dashboard, whilst simultaneously checking if the user has maxed out the number of clients their plan
-    allows (this is the plus plan, so 150 clients maximum).
 - Setup the settings tab to allow users to integrate stripe .etc. which will be required in update v1.3 where the majority of the sidebar will be
     completed, including accounting and payments, allowing for everything to be done within Crysion. Integration methods should not yet be introduced,
     but the software should be ready for it.

@@ -410,6 +410,7 @@ body.light-mode {
     font-weight: 600;
     margin-bottom: 15px;
     text-align: center;
+    color: black;
 }
 
 /* Modal content */
@@ -417,6 +418,7 @@ body.light-mode {
     font-size: 16px;
     margin-bottom: 20px;
     text-align: center;
+    color: black;
 }
 
 /* Modal buttons */
