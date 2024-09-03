@@ -131,20 +131,26 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <div class="modal-body">
                                 <form id="newClientForm">
-                                    <label for="first_name">First Name:</label>
-                                    <input type="text" id="first_name" name="first_name" required>
-    
-                                    <label for="surname">Surname:</label>
-                                    <input type="text" id="surname" name="surname" required>
-    
-                                    <label for="email">Email:</label>
-                                    <input type="email" id="email" name="email" required>
-    
-                                    <label for="phone">Phone:</label>
-                                    <input type="tel" id="phone" name="phone" required>
-    
-                                    <button type="submit">Submit</button>
-                                    <button type="button" id="cancel-new-client">Cancel</button>
+                                    <div class="form-group">
+                                        <label for="first_name">First Name:</label>
+                                        <input type="text" id="first_name" name="first_name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="surname">Surname:</label>
+                                        <input type="text" id="surname" name="surname" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email:</label>
+                                        <input type="email" id="email" name="email" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Phone:</label>
+                                        <input type="tel" id="phone" name="phone" required>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit">Submit</button>
+                                        <button type="button" id="cancel-new-client">Cancel</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
