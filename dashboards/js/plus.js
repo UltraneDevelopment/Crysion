@@ -305,8 +305,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <div class="modal-body">
                                 <p id="modal-content">Content</p>
-                                <button id="copy-modal">Copy</button>
-                                <button id="close-modal">Close</button>
+                                <button id="copy-modal" class="copy-modal">Copy</button>
+                                <button id="close-modal" class="close-modal">Close</button>
                             </div>
                         </div>
                     `;

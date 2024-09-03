@@ -521,6 +521,25 @@ body.light-mode {
     background-color: #0056b3;
 }
 
+/* Copy and Close Modal Buttons */
+
+.copy-modal, .close-modal {
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    background-color: #fff;
+    border-width: 0.5px;
+    transition: ease 0.5s;
+}
+
+.copy-modal:hover {
+    transform: scale(1.05);
+}
+
+.close-modal:hover {
+    transform: scale(1.05);
+}
+
 @media (max-width: 768px) {
     .dashboard-container {
         flex-direction: column;
