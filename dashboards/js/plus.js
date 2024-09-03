@@ -403,21 +403,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
                 break;
-            case 'profile':
-                headerText = 'Profile';
-                contentHTML = `
-                    <div class="card-container">
-                        <div class="card"></div>
-                        <div class="card"></div>
-                        <div class="card"></div>
-                        <div class="card"></div>
-                        <div class="card"></div>
-                        <div class="card"></div>
-                        <div class="card"></div>
-                        <div class="card"></div>
-                    </div>
-                `;
-                break;
             case 'team':
                 headerText = 'Team';
                 contentHTML = `
