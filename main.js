@@ -65,7 +65,7 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadFile('index.html');
+  mainWindow.loadFile('dashboards/plus-dashboard.html');
 
   // Send the application version to the renderer
   mainWindow.webContents.on('did-finish-load', () => {
